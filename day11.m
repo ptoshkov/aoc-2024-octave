@@ -20,12 +20,17 @@ function appendStones(value)
     end
 end
 
-function [stone1, stone2] = processEvenNumberDigitsStone(value)
-    valueStr = num2str(value);
-    str1 = valueStr(1:numel(valueStr)/2);
-    str2 = valueStr(1+numel(valueStr)/2:end);
-    stone1 = str2num(str1);
-    stone2 = str2num(str2);
+function popStones(value)
+    global stones;
+    global counts;
+
+    counts(find(stones == value))--;
+end
+
+function [stone1, stone2] = processEvenNumberDigitsStone(value, midpoint)
+    tens = 10^midpoint;
+    stone1 = floor(value/tens);
+    stone2 = rem(value, tens);
 end
 
 function processStones()
@@ -38,16 +43,20 @@ function processStones()
         stone = stonesBackup(ii);
 
         for jj = 1:countsBackup(ii)
-            counts(ii)--;
+            popStones(stone);
 
             if(stone == 0)
                 appendStones(1);
-            elseif(rem(numel(num2str(stone)), 2) == 0)
-                [stone1, stone2] = processEvenNumberDigitsStone(stone);
-                appendStones(stone1);
-                appendStones(stone2);
             else
-                appendStones(2024*stone)
+                digits = floor(log10(stone)) + 1;
+
+                if(rem(digits, 2) == 0)
+                    [stone1, stone2] = processEvenNumberDigitsStone(stone, digits/2);
+                    appendStones(stone1);
+                    appendStones(stone2);
+                else
+                    appendStones(2024*stone)
+                end
             end
         end
     end
@@ -57,12 +66,3 @@ for ii = 1:25
     disp(ii);
     processStones();
 end
-
-% assert(204022 == sum(counts));
-
-for ii = 26:75
-    disp(ii);
-    processStones();
-end
-
-sum(counts)
