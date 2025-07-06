@@ -919,8 +919,7 @@ end
 
 operators_per_equation = sortrows(operators_per_equation);
 
-% for ii = 1:numel(dat)
-for ii = 842:850
+for ii = 1:numel(dat)
     disp(ii)
     next_eq_ix = operators_per_equation(ii, 2);
     eqstr = dat{next_eq_ix};
@@ -942,7 +941,7 @@ for ii = 842:850
 end
 
 % 1:775
-% sum_possible = 
+% sum_possible = 431218877464138
 
 % 776:786
 % sum_possible = 1171719004090
@@ -964,6 +963,11 @@ end
 
 % 842:850
 % sum_possible = 1270091936
+
+% 1171719004090 + 5436455086911 + 38722870463 + 1498838625 + 155843672307 + 2724248140 + 1270091936 = 6808233812472
+% 6808233812472 + 431218877464138 = 438027111276610
+
+assert(7579994664753 == sum_possible);
 
 
 
