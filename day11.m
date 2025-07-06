@@ -28,14 +28,6 @@ function [stone1, stone2] = processEvenNumberDigitsStone(value)
     stone2 = str2num(str2);
 end
 
-function clearEmpty()
-    global stones;
-    global counts;
-
-    stones(counts == 0) = [];
-    counts(counts == 0) = [];
-end
-
 function processStones()
     global stones;
     global counts;
@@ -43,11 +35,6 @@ function processStones()
     countsBackup = counts;
 
     for ii = 1:numel(stonesBackup)
-        assert(counts(ii) >= 0);
-        if(counts(ii) <= 0)
-            continue;
-        end
-
         stone = stonesBackup(ii);
 
         for jj = 1:countsBackup(ii)
@@ -69,7 +56,6 @@ end
 for ii = 1:25
     disp(ii);
     processStones();
-    clearEmpty();
 end
 
 % assert(204022 == sum(counts));
@@ -77,7 +63,6 @@ end
 for ii = 26:75
     disp(ii);
     processStones();
-    clearEmpty();
 end
 
 sum(counts)
