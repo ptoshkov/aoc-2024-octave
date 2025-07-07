@@ -8,8 +8,6 @@ global counts;
 stones = [0 37551 469 63 1 791606 2065 9983586];
 counts = [1 1 1 1 1 1 1 1];
 
-
-
 function appendStones(value)
     global stones;
     global counts;
@@ -72,6 +70,9 @@ function processStones()
     end
 end
 
+stones = stones(:, :);
+counts = counts(:, :);
+
 totalSum = 0;
 allStones = stones;
 allCounts = counts;
@@ -110,16 +111,52 @@ sumPost25
 size(stonesPost25)
 % assert(204022 == sumPost25);
 
-stonesPost50 = [];
-countsPost50 = [];
-sumPost50 = 0;
+stonesPost40 = [];
+countsPost40 = [];
+sumPost40 = 0;
 
 for i = 1:numel(stonesPost25)
     disp(i)
     stones = [stonesPost25(i)];
     counts = [countsPost25(i)];
 
-    for ii = 26:50
+    for ii = 26:40
+        fprintf("%d ", ii);
+        processStones();
+        clearStones();
+    end
+
+    for ii = 1:numel(stones)
+        value = stones(ii);
+        count = counts(ii);
+
+        for jj = 1:count
+            if(any(stonesPost40 == value))
+                countsPost40(find(stonesPost40 == value))++;
+            else
+                stonesPost40 = [stonesPost40, value];
+                countsPost40 = [countsPost40, 1];
+            end
+        end
+    end
+
+    sumPost40+=sum(counts);
+    disp("");
+end
+
+sumPost40
+size(stonesPost40)
+
+stonesPost50 = [];
+countsPost50 = [];
+sumPost50 = 0;
+
+for i = 1:numel(stonesPost40)
+    disp(i)
+    stones = [stonesPost40(i)];
+    counts = [countsPost40(i)];
+
+    for ii = 41:50
         fprintf("%d ", ii);
         processStones();
         clearStones();
@@ -143,12 +180,51 @@ for i = 1:numel(stonesPost25)
     disp("");
 end
 
+sumPost50
+size(stonesPost50)
+
+stonesPost60 = [];
+countsPost60 = [];
+sumPost60 = 0;
+
 for i = 1:numel(stonesPost50)
     disp(i)
     stones = [stonesPost50(i)];
     counts = [countsPost50(i)];
 
-    for ii = 51:75
+    for ii = 51:62
+        fprintf("%d ", ii);
+        processStones();
+        clearStones();
+    end
+
+    for ii = 1:numel(stones)
+        value = stones(ii);
+        count = counts(ii);
+
+        for jj = 1:count
+            if(any(stonesPost60 == value))
+                countsPost60(find(stonesPost60 == value))++;
+            else
+                stonesPost60 = [stonesPost60, value];
+                countsPost60 = [countsPost60, 1];
+            end
+        end
+    end
+
+    sumPost60+=sum(counts);
+    disp("");
+end
+
+sumPost60
+size(stonesPost60)
+
+for i = 1:numel(stonesPost60)
+    disp(i)
+    stones = [stonesPost60(i)];
+    counts = [countsPost60(i)];
+
+    for ii = 63:75
         fprintf("%d ", ii);
         processStones();
         clearStones();
