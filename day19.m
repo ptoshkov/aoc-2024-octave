@@ -864,6 +864,10 @@ patterns = {
 % "bbrgwb"
 % };
 
+% patterns = {
+% "wwugguwgrwwbrwubrwrwburubgrwubbbrugbggwrbwrwwrgggg"
+% };
+
 global jumpedToTheEnd;
 jumpedToTheEnd = false;
 
@@ -893,6 +897,7 @@ function canJumpToTheEnd(paths, currentIndex, endIndex)
 end
 
 sum1 = 0;
+canJumpToTheEndIndices = [];
 
 for ii = 1:numel(patterns)
     ii
@@ -914,11 +919,95 @@ for ii = 1:numel(patterns)
     canJumpToTheEnd(paths, 0, numel(pattern));
     
     if(jumpedToTheEnd)
+        canJumpToTheEndIndices = [canJumpToTheEndIndices, ii];
         sum1++;
     end
 end
 
 sum1
 % assert(340 == sum1)
+
+% stolen from https://github.com/grant-dot-dev/advent_of_code_2024/blob/main/Day19_Python/part1.py
+function total_ways = count_arrangements(design, towels, cache)
+    if(isKey(cache, design))
+        total_ways = cache(design);
+        return;
+    end
+
+    if(numel(design) == 0)
+        total_ways = 1;
+        return;
+    end
+
+    total_ways = 0;
+
+    for ii = 1:numel(towels)
+        towel = towels{ii};
+
+        if(startsWith(design, towel))
+            remainder = design(numel(towel) + 1:end);
+            total_ways+=count_arrangements(remainder, towels, cache);
+        end
+    end
+
+    cache(design) = total_ways;
+end
+
+sum2 = 0;
+
+for ii = 1:numel(canJumpToTheEndIndices)
+    ii
+    patternIdx = canJumpToTheEndIndices(ii);
+    pattern = patterns{patternIdx};
+    cache = containers.Map;
+    sum2+=count_arrangements(pattern, parts, cache);
+end
+
+sum2
+% assert(sum2 == 717561822679428);
+
+function total = canJumpToTheEndP2(paths, currentIndex, endIndex, total)
+    if(currentIndex >= endIndex)
+        total++;
+        return;
+    end
+
+    nextIndex = currentIndex + 1;
+
+    for ii = 1:numel(paths)
+        Path = paths{ii};
+
+        if(Path(1) == nextIndex)
+            % possible path
+            total = canJumpToTheEndP2(paths, Path(end), endIndex, total);
+        end
+    end
+end
+
+sum2 = 0;
+
+for ii = 1:numel(canJumpToTheEndIndices)
+    ii
+    patternIdx = canJumpToTheEndIndices(ii);
+    pattern = patterns{patternIdx};
+    paths = {};
+
+    for jj = 1:numel(parts)
+        part = parts{jj};
+        indicesStart = strfind(pattern, part);
+
+        for kk = 1:numel(indicesStart)
+            indexStart = indicesStart(kk);
+            indexEnd = indexStart + numel(part) - 1;
+            paths = [paths, [indexStart:indexEnd]];
+        end
+    end
+
+    total = canJumpToTheEndP2(paths, 0, numel(pattern), 0);
+    sum2+=total;
+end
+
+sum2
+% assert(sum2 == 717561822679428);
 
 
