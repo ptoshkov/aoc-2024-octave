@@ -313,7 +313,9 @@ costs(locations == endPos)
 % assert(109516 == costs(locations == endPos));
 
 global allRoutes;
+global allRoutesCell;
 allRoutes = [];
+allRoutesCell = {};
 max_recursion_depth(1024);
 
 function costToRotate = getCostToRotate(currentOrientation, desiredOrientation)
@@ -382,6 +384,7 @@ end
 
 function findRoute(data, location, endPos, route, locations, costs, orientations, totalCost, orientation)
     global allRoutes;
+    global allRoutesCell;
     route(end + 1) = location;
     lowestCostToGetHere = costs(locations == location);
     lowestCostOrientation = orientations(locations == location);
@@ -405,11 +408,13 @@ function findRoute(data, location, endPos, route, locations, costs, orientations
     end
 
     if(totalCost > costs(locations == endPos))
+        return;
     end
 
     if(location == endPos)
         disp("Found")
         allRoutes = [allRoutes, route];
+        allRoutesCell(end + 1) = route;
         return;
     end
 
