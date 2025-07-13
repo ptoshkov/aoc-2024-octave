@@ -142,6 +142,44 @@ data = [
 "#############################################################################################################################################"
 ];
 
+% data = [
+% "###############";
+% "#.......#....E#";
+% "#.#.###.#.###.#";
+% "#.....#.#...#.#";
+% "#.###.#####.#.#";
+% "#.#.#.......#.#";
+% "#.#.#####.###.#";
+% "#...........#.#";
+% "###.#.#####.#.#";
+% "#...#.....#.#.#";
+% "#.#.#.###.#.#.#";
+% "#.....#...#.#.#";
+% "#.###.#.#.#.#.#";
+% "#S..#.....#...#";
+% "###############"
+% ];
+% 
+% data = [
+% "#################";
+% "#...#...#...#..E#";
+% "#.#.#.#.#.#.#.#.#";
+% "#.#.#.#...#...#.#";
+% "#.#.#.#.###.#.#.#";
+% "#...#.#.#.....#.#";
+% "#.#.#.#.#.#####.#";
+% "#.#...#.#.#.....#";
+% "#.#.#####.#.###.#";
+% "#.#.#.......#...#";
+% "#.#.###.#####.###";
+% "#.#.#...#.....#.#";
+% "#.#.#.#####.###.#";
+% "#.#.#.........#.#";
+% "#.#.#.#########.#";
+% "#S#.............#";
+% "#################"
+% ];
+
 startPos = find(data == 'S');
 endPos = find(data == 'E');
 locations = find(data ~= '#');
@@ -269,12 +307,14 @@ while(~(isempty(unvisitedLocations)))
     end
 end
 
+costMat = Inf*ones(size(data));
+costMat(locations) = costs;
 costs(locations == endPos)
 % assert(109516 == costs(locations == endPos));
 
 global allRoutes;
 allRoutes = [];
-max_recursion_depth(512);
+max_recursion_depth(1024);
 
 function costToRotate = getCostToRotate(currentOrientation, desiredOrientation)
     costToRotate = 0;
@@ -340,12 +380,31 @@ function costToRotate = getCostToRotate(currentOrientation, desiredOrientation)
     end
 end
 
-function findRoute(data, location, endPos, route, locations, costs, totalCost, orientation)
+function findRoute(data, location, endPos, route, locations, costs, orientations, totalCost, orientation)
     global allRoutes;
     route(end + 1) = location;
+    lowestCostToGetHere = costs(locations == location);
+    lowestCostOrientation = orientations(locations == location);
+
+    if(totalCost > lowestCostToGetHere)
+        if(orientation == 0 && lowestCostOrientation == 'U')
+            return;
+        end
+
+        if(orientation == 1 && lowestCostOrientation == 'D')
+            return;
+        end
+
+        if(orientation == 2 && lowestCostOrientation == 'L')
+            return;
+        end
+
+        if(orientation == 3 && lowestCostOrientation == 'R')
+            return;
+        end
+    end
 
     if(totalCost > costs(locations == endPos))
-        return;
     end
 
     if(location == endPos)
@@ -390,23 +449,23 @@ function findRoute(data, location, endPos, route, locations, costs, totalCost, o
         direction = localCosts(ii, 2);
 
         if(direction == 0)
-            findRoute(data, upIdx, endPos, route, locations, costs, totalCost + localCosts(ii, 1), 0);
+            findRoute(data, upIdx, endPos, route, locations, costs, orientations, totalCost + localCosts(ii, 1), 0);
         end
 
         if(direction == 1)
-            findRoute(data, downIdx, endPos, route, locations, costs, totalCost + localCosts(ii, 1), 1);
+            findRoute(data, downIdx, endPos, route, locations, costs, orientations, totalCost + localCosts(ii, 1), 1);
         end
 
         if(direction == 2)
-            findRoute(data, leftIdx, endPos, route, locations, costs, totalCost + localCosts(ii, 1), 2);
+            findRoute(data, leftIdx, endPos, route, locations, costs, orientations, totalCost + localCosts(ii, 1), 2);
         end
 
         if(direction == 3)
-            findRoute(data, rightIdx, endPos, route, locations, costs, totalCost + localCosts(ii, 1), 3);
+            findRoute(data, rightIdx, endPos, route, locations, costs, orientations, totalCost + localCosts(ii, 1), 3);
         end
     end
 end
 
-findRoute(data, startPos, endPos, [], locations, costs, 0, 3);
+findRoute(data, startPos, endPos, [], locations, costs, orientations, 0, 3);
 numel(unique(allRoutes))
 % assert(568 == numel(unique(allRoutes)))
