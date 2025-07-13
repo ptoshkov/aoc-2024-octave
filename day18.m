@@ -3500,7 +3500,7 @@ function idx = bytePositionToIndex(bytePosition)
     idx = [bytePosition(2) + 1, bytePosition(1) + 1];
 end
 
-for ii = 1:fallenBytesCnt
+for ii = 1:fallenBytesCnt + 2013
     idx = bytePositionToIndex(bytePositions(ii, :));
     data(idx(1) + 1, idx(2) + 1) = '#';
 end
@@ -3560,6 +3560,7 @@ costMat = Inf*ones(size(data));
 costMat(locations) = costs;
 costs(locations == endPos)
 % assert(234 == costs(locations == endPos));
+% assert(all([58,19] == bytePositions(ii, :)))
 
 
 
