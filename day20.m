@@ -318,6 +318,7 @@ findRoute(costMat, find(costMat  == 9001), endPos);
 sum2 = 0;
 
 for ii = 1:(numel(routeIdxs) - 1)
+    ii
     startIdx = routeIdxs(ii);
     startSub = routeSubs(ii, :);
     startCost = costMat(startIdx);
@@ -339,7 +340,11 @@ for ii = 1:(numel(routeIdxs) - 1)
         % find the minimum cost to get from start index to end index
         distance = abs(startSub(1) - endSub(1)) + abs(startSub(2) - endSub(2));
 
-        % compute the cost with cheats = costDifference - minimum cost to get from 
+        if(distance > 20)
+            continue;
+        end
+
+        % compute the cost with cheats = costDifference - minimum cost to get from start index to end index
         costSaving = costDifference - distance;
 
         % if(costSaving >= 50)
@@ -350,4 +355,5 @@ for ii = 1:(numel(routeIdxs) - 1)
 end
 
 sum2
+% assert(1026446 == sum2);
 
