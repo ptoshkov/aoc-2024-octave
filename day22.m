@@ -10,13 +10,6 @@ end
 
 % assert(17005483322 == sum(evolveNumber(dat, 2000)));
 
-%dat = [
-%1;
-%2;
-%3;
-%2024
-%];
-
 numbers = dat;
 prices = [];
 priceChanges = [];
@@ -59,12 +52,19 @@ for ii = 1:rows(fourDigitSequences)
     % attempt to sell at this sequence
     for jj = 1:rows(priceChanges)
         priceChangesRow = priceChanges(jj, :);
+        possibleIndices = find(priceChangesRow == sequence(1));
         sequenceIndex = [];
 
-        for kk = 1:(numel(priceChangesRow) - 3)
-            if((priceChangesRow(kk) == sequence(1)) && (priceChangesRow(kk + 1) == sequence(2)) && ...
-                (priceChangesRow(kk + 2) == sequence(3)) && (priceChangesRow(kk + 3) == sequence(4)))
-                sequenceIndex = kk;
+        for kk = 1:numel(possibleIndices)
+            possibleIndex = possibleIndices(kk);
+            
+            if(possibleIndex > (numel(priceChangesRow) - 3))
+                continue;
+            end
+
+            if((priceChangesRow(possibleIndex) == sequence(1)) && (priceChangesRow(possibleIndex + 1) == sequence(2)) && ...
+                (priceChangesRow(possibleIndex + 2) == sequence(3)) && (priceChangesRow(possibleIndex + 3) == sequence(4)))
+                sequenceIndex = possibleIndex;
                 break;
             end
         end
@@ -81,3 +81,4 @@ for ii = 1:rows(fourDigitSequences)
 end
 
 maxPrice
+assert(maxPrice == 1910);
