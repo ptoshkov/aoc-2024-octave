@@ -1,6 +1,8 @@
 Advent of Code 2024 solutions in MATLAB/Octave
 https://adventofcode.com/2024
 
+![](completion.png)
+
 Day 1
 https://adventofcode.com/2024/day/1
 
