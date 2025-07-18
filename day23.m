@@ -3380,7 +3380,7 @@ data = {
 ["ji";"sg"];
 ["ww";"nx"]
 };
-data = {
+dataEg = {
 ["kh"; "tc"],
 ["qp"; "kh"],
 ["de"; "cg"],
@@ -3471,9 +3471,6 @@ triangles = unique(triangles, 'rows');
 rows(triangles)
 % assert(1043 == rows(triangles));
 
-global groups;
-groups = {};
-
 function ret = inGroups(groups, group)
     ret = false;
 
@@ -3485,16 +3482,8 @@ function ret = inGroups(groups, group)
     end
 end
 
-function findGroup(connections, node, group)
-    global groups;
+function group = findGroup(connections, node, group)
     group = sortrows(group);
-
-    if(inGroups(groups, group))
-        return;
-    else
-        groups(end + 1) = group;
-    end
-
     currentConnections = connections(node);
 
     for ii = 1:rows(currentConnections)
@@ -3526,28 +3515,25 @@ function findGroup(connections, node, group)
         end
 
         if(isConnectionOfAllGroupMembers)
-            findGroup(connections, connection, [group; connection]);
+            group = findGroup(connections, connection, [group; connection]);
         end
     end
 end
 
+largestGroup = [];
+largestGroupSize = 0;
+
 for ii = 1:numel(nodes)
     ii
     node = nodes{ii};
-    findGroup(connections, node, [node]);
-end
-
-largestGroupSize = 0;
-largestGroupIndex = 0;
-
-for ii = 1:numel(groups)
-    group = groups{ii};
+    group = findGroup(connections, node, [node]);
     groupSize = rows(group);
 
     if(groupSize > largestGroupSize)
-        largestGroupIndex = ii;
+        largestGroup = group;
         largestGroupSize = groupSize;
     end
 end
 
-groups{largestGroupIndex}
+largestGroup
+% assert([ai;bk;dc;dx;fo;gx;hk;kd;os;uz;xn;yk;zs] == largestGroup);
