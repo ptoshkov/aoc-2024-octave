@@ -3,6 +3,9 @@ https://adventofcode.com/2024
 
 ![](completion.png)
 
+Reddit Post About Day 24
+https://tinyurl.com/7vjbj7x8
+
 Day 1
 https://adventofcode.com/2024/day/1
 
